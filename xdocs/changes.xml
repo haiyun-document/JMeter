@@ -1,0 +1,217 @@
+<?xml version="1.0"?> 
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+ 
+       http://www.apache.org/licenses/LICENSE-2.0
+ 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>   
+<properties>     
+	<author email="dev AT jakarta.apache.org">JMeter developers</author>     
+	<title>Changes</title>   
+</properties> 
+<body> 
+<section name="Changes"> 
+
+<note>
+<b>This page details the changes made in the current version only.</b>
+<br></br>
+Earlier changes are detailed in the <a href="changes_history.html">History of Previous Changes</a>.
+</note>
+
+
+<!--  =================== 2.5.2 =================== -->
+
+<h1>Version 2.5.2</h1>
+
+<h2>Summary of main changes</h2>
+
+<ul>
+</ul>
+
+
+<!--  =================== Known bugs =================== -->
+
+<h2>Known bugs</h2>
+
+<p>
+The Include Controller has some problems in non-GUI mode. 
+In particular, it can cause a NullPointerException if there are two include controllers with the same name.
+</p>
+
+<p>The Once Only controller behaves correctly under a Thread Group or Loop Controller,
+but otherwise its behaviour is not consistent (or clearly specified).</p>
+
+<p>The If Controller may cause an infinite loop if the condition is always false from the first iteration. 
+A workaround is to add a sampler at the same level as (or superior to) the If Controller.
+For example a Test Action sampler with 0 wait time (which doesn't generate a sample),
+or a Debug Sampler with all fields set to False (to reduce the sample size).
+</p>
+
+<p>Start next Loop option in Thread Group is broken, see Bugs (51868, 51866, 51865).</p>
+
+<p>
+The menu item Options / Choose Language does not change all the displayed text to the new language.
+[The behaviour has improved, but language change is still not fully working]
+To override the default local language fully, set the JMeter property "language" before starting JMeter. 
+</p>
+
+<!-- =================== Incompatible changes =================== -->
+
+<h2>Incompatible changes</h2>
+
+<p>
+JMeter versions since 2.1 failed to create a container sample when loading embedded resources.
+This has been corrected; can still revert to the Bug 51939 behaviour by setting the following property:
+<code>httpsampler.separate.container=false</code>
+</p>
+<p>
+Mirror server now uses default port 8081, was 8080 before 2.5.1.
+</p>
+<p>
+TCP Sampler handles SocketTimeoutException, SocketException and InterruptedIOException differently since 2.5.2, when
+these occurs, Sampler is marked as failed.
+</p>
+<!-- =================== Bug fixes =================== -->
+
+<h2>Bug fixes</h2>
+
+<h3>HTTP Samplers and Proxy</h3>
+<ul>
+<li>Bug 51932 - CacheManager does not handle cache-control header with any attributes after max-age</li>
+<li>Bug 51918 - GZIP compressed traffic produces errors, when multiple connections allowed</li>
+<li>Bug 51939 - Should generate new parent sample if necessary when retrieving embedded resources</li>
+<li>Bug 51942 - Synchronisation issue on CacheManager when Concurrent Download is used</li>
+<li>Bug 51957 - Concurrent get can hang if a task does not complete</li>
+<li>Bug 51925 - Calling Stop on Test leaks executor threads when concurrent download of resources is on</li>
+<li>Bug 51980 - HtmlParserHTMLParser double-counts images used in links</li>
+<li>Bug 52064 - OutOfMemory Risk in CacheManager</li>
+<li>Bug 51919 - Random ConcurrentModificationException or NoSuchElementException in CookieManager#removeMatchingCookies when using Concurrent Download</li>
+</ul>
+
+<h3>Other Samplers</h3>
+<ul>
+<li>Bug 51996 - JMS Initial Context leak newly created Context when Multiple Thread enter InitialContextFactory#lookupContext at the same time</li>
+<li>Bug 51691 - Authorization does not work for JMS Publisher and JMS Subscriber</li>
+<li>Bug 52036 - Durable Subscription fails with ActiveMQ due to missing clientId field</li>
+<li>Bug 52044 - JMS Subscriber used with many threads leads to javax.naming.NamingException: Something already bound with ActiveMQ</li>
+<li>Bug 52072 - LengthPrefixedBinaryTcpClientImpl may end a sample prematurely</li>
+</ul>
+
+<h3>Controllers</h3>
+<ul>
+<li>Bug 51865 - Infinite loop inside thread group does not work properly if "Start next loop after a Sample error" option set</li>
+<li>Bug 51868 - A lot of exceptions in jmeter.log while using option "Start next loop" for thread</li>
+<li>Bug 51866 - Counter under loop doesn't work properly if "Start next loop on error" option set for thread group</li>
+</ul>
+
+<h3>Listeners</h3>
+<ul>
+</ul>
+
+<h3>Assertions</h3>
+<ul>
+</ul>
+
+<h3>Functions</h3>
+<ul>
+</ul>
+
+<h3>I18N</h3>
+<ul>
+</ul>
+
+<h3>General</h3>
+<ul>
+<li>Bug 51937 - JMeter does not handle missing TestPlan entry well</li>
+<li>Bug 51988 - CSV Data Set Configuration does not resolve default delimiter for header parsing when variables field is empty</li>
+<li>Bug 52003 - View Results Tree "Scroll automatically" does not scroll properly in case nodes are expanded</li>
+<li>Bug 27112 - User Parameters should use scrollbars</li>
+<li>Bug 52029 - Command-line shutdown only gets sent to last engine that was started</li>
+<li>Bug 52093 - Toolbar ToolTips don't switch language</li>
+<li>Bug 51733 - SyncTimer is messed up if you a interrupt a test plan</li>
+<li>Bug 52118 - New toolbar : shutdown and stop buttons not disabled when no test is running</li>
+</ul>
+
+<!-- =================== Improvements =================== -->
+
+<h2>Improvements</h2>
+
+<h3>HTTP Samplers</h3>
+<ul>
+<li>Bug 51981 - Better support for file: protocol in HTTP sampler</li>
+<li>Bug 52033 - Allowing multiple certificates (JKS)</li>
+</ul>
+
+<h3>Other samplers</h3>
+<ul>
+<li>Bug 51419 - JMS Subscriber: ability to use Selectors</li>
+<li>Bug 52088 - JMS Sampler : Add a selector when REQUEST / RESPONSE is chosen</li>
+<li>Bug 52104 - TCP Sampler handles badly errors</li>
+<li>Bug 52115 - SOAP/XML-RPC should not send a POST request when file to send is not found</li>
+</ul>
+
+<h3>Controllers</h3>
+<ul>
+</ul>
+
+<h3>Listeners</h3>
+<ul>
+<li>Bug 52022 - In View Results Tree rather than showing just a message if the results are to big, show as much of the result as are configured</li>
+</ul>
+
+<h3>Timers, Assertions, Config, Pre- &amp; Post-Processors</h3>
+<ul>
+</ul>
+
+<h3>Functions</h3>
+<ul>
+<li>Bug 52006 - Create a function RandomString to generate random Strings</li>
+<li>Bug 52016 - It would be useful to support Jexl2</li>
+</ul>
+
+<h3>I18N</h3>
+<ul>
+</ul>
+
+<h3>General</h3>
+<ul>
+<li>Bug 51892 - Default mirror port should be different from default proxy port</li>
+<li>Bug 51817 - Moving variables up and down in User Defined Variables control</li>
+<li>Bug 51876 - Functionality to search in Samplers TreeView</li>
+<li>Bug 52019 - Add menu option to Start a test ignoring Pause Timers</li>
+<li>Bug 52027 - Allow System or CrossPlatform LAF to be set from options menu</li>
+<li>Bug 52037 - Remember user-set LaF over restarts.</li>
+<li>Bug 51861 - Improve HTTP Request GUI to better show parameters without name (GWT RPC requests for example) (UNDER DEVELOPMENT)</li>
+<li>Bug 52040 - Add a toolbar in JMeter main window</li>
+<li>Bug 51816 - Comment Field in User Defined Variables control.</li>
+<li>Bug 52052 - Using a delimiter to separate result-messages for JMS Subscriber</li>
+<li>Bug 52103 - Add automatic scrolling option to table visualizer</li>
+<li>Bug 52097 - Save As should point to same folder that was used to open a file if MRU list is used</li>
+<li>Bug 52085 - Allow multiple selection in arguments panel</li>
+<li>Bug 52099 - Allow to set the transaction isolation in the JDBC Connection Configuration</li>
+<li>Bug 52116 - Allow to add (paste) entries from the clipboard to an arguments list</li>
+</ul>
+
+<h2>Non-functional changes</h2>
+<ul>
+<li>fixes to build.xml: support scripts; localise re-usable property names</li>
+<li>Bug 51923 - Counter function bug or documentation issue ? (fixed docs)</li>
+<li>Update velocity.jar to 1.7 (from 1.6.2)</li>
+<li>Bug 51954 - Generated documents include &lt;/br&gt; entries which cause extra blank lines </li>
+<li>Bug 52075 - JMeterProperty.clone() currently returns Object; it should return JMeterProperty</li>
+</ul>
+
+</section> 
+</body> 
+</document>
