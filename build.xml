@@ -2482,6 +2482,16 @@ run JMeter unless all the JMeter jars are added.
         <process_jarfile jarname="activation"/>
         <process_jarfile jarname="javamail"/>
         <process_jarfile jarname="jms"/>
+        <process_jarfile jarname="cglib-nodep"/>
+        <process_jarfile jarname="commons-exec"/>
+        <process_jarfile jarname="guava"/>
+        <process_jarfile jarname="jna"/>
+        <process_jarfile jarname="jsr305"/>
+        <process_jarfile jarname="json"/>
+        <process_jarfile jarname="platform"/>
+        <process_jarfile jarname="selenium-api"/>
+        <process_jarfile jarname="selenium-firefox-driver"/>
+        <process_jarfile jarname="selenium-remote-driver"/>
         <process_jarfile jarname="velocity"   dest.dir="${lib.doc}"/>
     </target>
 
