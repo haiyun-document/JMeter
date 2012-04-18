@@ -2450,8 +2450,8 @@ run JMeter unless all the JMeter jars are added.
         <process_jarfile jarname="json"/>
         <process_jarfile jarname="platform"/>
         <process_jarfile jarname="selenium-api"/>
-        <process_jarfile jarname="selenium-firefox-driver"/>
-        <process_jarfile jarname="selenium-remote-driver"/>
+        <process_jarfile jarname="selenium-firefox"/>
+        <process_jarfile jarname="selenium-remote"/>
         <process_jarfile jarname="velocity"   dest.dir="${lib.doc}"/>
     </target>
 
