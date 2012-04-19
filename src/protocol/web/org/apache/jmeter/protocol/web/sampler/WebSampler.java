@@ -1,31 +1,50 @@
 package org.apache.jmeter.protocol.web.sampler;
 
+import java.io.PrintStream;
+import java.util.Properties;
+
+import org.apache.bsf.BSFEngine;
+import org.apache.bsf.BSFException;
+import org.apache.bsf.BSFManager;
 import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
+import org.apache.jmeter.samplers.Sampler;
 import org.apache.jmeter.testelement.ThreadListener;
+import org.apache.jmeter.threads.JMeterContext;
+import org.apache.jmeter.threads.JMeterContextService;
+import org.apache.jmeter.threads.JMeterVariables;
+import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.logging.LoggingManager;
+import org.apache.jorphan.util.JOrphanUtils;
 import org.apache.log.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 
 /**
- * A Sampler that makes HTTP requests using a real browser (via. Selenium/WebDriver).
+ * A Sampler that makes HTTP requests using a real browser (via. Selenium/WebDriver).  It currently 
+ * provides a scripting mechanism via. Javascript to control the browser instance.
  */
 public class WebSampler extends AbstractSampler implements ThreadListener {
 
-	private static final long serialVersionUID = 234L;
-    
     private static final Logger LOGGER = LoggingManager.getLoggerForClass();
     
+	private static final long serialVersionUID = 234L;
+    
     private transient WebDriver browser;
+
+	private transient String script;
 
 	@Override
 	public SampleResult sample(Entry e) {
         LOGGER.debug("sampling web");
 
-        SampleResult res = new SampleResult();
+        // BSF Code copied liberally from BSFSampler
+        final BSFEngine bsfEngine;
+        final BSFManager mgr = new BSFManager();
+        
+        final SampleResult res = new SampleResult();
         res.setSampleLabel(getName());
         res.setSamplerData(toString());
         res.setDataType(SampleResult.TEXT);
@@ -38,8 +57,11 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
         res.setResponseCodeOK();
 
         try {
+            initManager(mgr);
+            bsfEngine = mgr.loadScriptingEngine("javascript");
+            
             res.sampleStart();
-            browser.get("http://www.google.com");
+            bsfEngine.exec("script", 0, 0, "browser.get('http://www.google.com/')");
             res.sampleEnd();
 
             res.setResponseData(browser.getPageSource().getBytes());
@@ -47,13 +69,40 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
         } catch (Exception ex) {
             res.setResponseMessage(ex.toString());
             res.setResponseCode("000");
-            res.setResponseData(ex.getMessage().getBytes());
+            if(ex.getMessage() != null) {
+                res.setResponseData(ex.getMessage().getBytes());
+            }
             res.setSuccessful(false);
         }
 
         // TODO: process warnings? Set Code and Message to success?
         return res;
 	}
+
+	private void initManager(BSFManager mgr) throws BSFException{
+        final String label = getName();
+
+        // Use actual class name for log
+        mgr.declareBean("log", LOGGER, Logger.class); // $NON-NLS-1$
+        mgr.declareBean("Label",label, String.class); // $NON-NLS-1$
+        // Add variables for access to context and variables
+        JMeterContext jmctx = JMeterContextService.getContext();
+        JMeterVariables vars = jmctx.getVariables();
+        Properties props = JMeterUtils.getJMeterProperties();
+
+        mgr.declareBean("ctx", jmctx, jmctx.getClass()); // $NON-NLS-1$
+        mgr.declareBean("vars", vars, vars.getClass()); // $NON-NLS-1$
+        mgr.declareBean("props", props, props.getClass()); // $NON-NLS-1$
+        mgr.declareBean("browser", browser, WebDriver.class);
+        // For use in debugging:
+        mgr.declareBean("OUT", System.out, PrintStream.class); // $NON-NLS-1$
+
+        // Most subclasses will need these:
+        Sampler sampler = jmctx.getCurrentSampler();
+        mgr.declareBean("sampler", sampler, Sampler.class);
+        SampleResult prev = jmctx.getPreviousResult();
+        mgr.declareBean("prev", prev, SampleResult.class);
+    }
 
 	@Override
 	public void threadStarted() {
