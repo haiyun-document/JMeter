@@ -17,12 +17,16 @@ public class WebSamplerGui extends AbstractSamplerGui {
 	public TestElement createTestElement() {
 		WebSampler sampler = new WebSampler();
 		configureTestElement(sampler);
+		sampler.setScript("browser.get('http://www.google.com/')");
 		return sampler;
 	}
 
 	@Override
 	public void modifyTestElement(TestElement element) {
-
+        this.configureTestElement(element);
+        if (!(element instanceof WebSampler)) return;
+        WebSampler sampler = (WebSampler) element;
+		sampler.setScript("browser.get('http://www.google.com/')");
 	}
 
 }
