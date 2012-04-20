@@ -16,6 +16,7 @@ import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.logging.LoggingManager;
+import org.apache.jorphan.util.JOrphanUtils;
 import org.apache.log.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -27,12 +28,14 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  */
 public class WebSampler extends AbstractSampler implements ThreadListener {
 
-    private static final String SCRIPT = "WebSampler.script";
+    public static final String SCRIPT = "WebSampler.script";
 
+	public static final String PARAMETERS = "WebSampler.parameters";
+    
 	private static final Logger LOGGER = LoggingManager.getLoggerForClass();
     
 	private static final long serialVersionUID = 234L;
-    
+
     private transient WebDriver browser;
     
 	@Override
@@ -77,12 +80,15 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
         return res;
 	}
 
-	private void initManager(BSFManager mgr) throws BSFException{
-        final String label = getName();
-
+	private void initManager(BSFManager mgr) throws BSFException {
+		final String scriptParameters = getParameters();
+		
         // Use actual class name for log
         mgr.declareBean("log", LOGGER, Logger.class); // $NON-NLS-1$
-        mgr.declareBean("Label",label, String.class); // $NON-NLS-1$
+        mgr.declareBean("Label",getName(), String.class); // $NON-NLS-1$
+        mgr.declareBean("Parameters", scriptParameters, String.class); // $NON-NLS-1$
+        String [] args=JOrphanUtils.split(scriptParameters, " ");//$NON-NLS-1$
+        mgr.declareBean("args",args,args.getClass());//$NON-NLS-1$
         // Add variables for access to context and variables
         JMeterContext jmctx = JMeterContextService.getContext();
         JMeterVariables vars = jmctx.getVariables();
@@ -91,6 +97,7 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
         mgr.declareBean("ctx", jmctx, jmctx.getClass()); // $NON-NLS-1$
         mgr.declareBean("vars", vars, vars.getClass()); // $NON-NLS-1$
         mgr.declareBean("props", props, props.getClass()); // $NON-NLS-1$
+        // web specific classes
         mgr.declareBean("browser", browser, WebDriver.class);
         // For use in debugging:
         mgr.declareBean("OUT", System.out, PrintStream.class); // $NON-NLS-1$
@@ -120,5 +127,13 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
 	
 	public void setScript(String script) {
 		setProperty(SCRIPT, script);
+	}
+
+	public String getParameters() {
+		return getPropertyAsString(PARAMETERS);
+	}
+
+	public void setParameters(String parameters) {
+		setProperty(PARAMETERS, parameters);
 	}
 }
