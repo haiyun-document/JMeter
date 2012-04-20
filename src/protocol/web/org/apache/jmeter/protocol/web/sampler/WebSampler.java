@@ -9,7 +9,6 @@ import org.apache.bsf.BSFManager;
 import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
-import org.apache.jmeter.samplers.Sampler;
 import org.apache.jmeter.testelement.ThreadListener;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
@@ -35,6 +34,8 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
 	private static final Logger LOGGER = LoggingManager.getLoggerForClass();
     
 	private static final long serialVersionUID = 234L;
+	
+	private static final ByFacade BY = new ByFacade();
 
     private transient WebDriver browser;
     
@@ -99,14 +100,9 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
         mgr.declareBean("props", props, props.getClass()); // $NON-NLS-1$
         // web specific classes
         mgr.declareBean("browser", browser, WebDriver.class);
+        mgr.declareBean("by", BY, ByFacade.class);
         // For use in debugging:
         mgr.declareBean("OUT", System.out, PrintStream.class); // $NON-NLS-1$
-
-        // Most subclasses will need these:
-        Sampler sampler = jmctx.getCurrentSampler();
-        mgr.declareBean("sampler", sampler, Sampler.class);
-        SampleResult prev = jmctx.getPreviousResult();
-        mgr.declareBean("prev", prev, SampleResult.class);
     }
 
 	@Override
