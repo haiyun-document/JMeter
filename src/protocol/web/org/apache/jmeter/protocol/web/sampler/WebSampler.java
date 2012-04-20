@@ -16,7 +16,6 @@ import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.logging.LoggingManager;
-import org.apache.jorphan.util.JOrphanUtils;
 import org.apache.log.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -28,14 +27,14 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  */
 public class WebSampler extends AbstractSampler implements ThreadListener {
 
-    private static final Logger LOGGER = LoggingManager.getLoggerForClass();
+    private static final String SCRIPT = "WebSampler.script";
+
+	private static final Logger LOGGER = LoggingManager.getLoggerForClass();
     
 	private static final long serialVersionUID = 234L;
     
     private transient WebDriver browser;
-
-	private transient String script;
-
+    
 	@Override
 	public SampleResult sample(Entry e) {
         LOGGER.debug("sampling web");
@@ -61,7 +60,7 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
             bsfEngine = mgr.loadScriptingEngine("javascript");
             
             res.sampleStart();
-            bsfEngine.exec("script", 0, 0, "browser.get('http://www.google.com/')");
+            bsfEngine.exec("script", 0, 0, getScript());
             res.sampleEnd();
 
             res.setResponseData(browser.getPageSource().getBytes());
@@ -75,7 +74,6 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
             res.setSuccessful(false);
         }
 
-        // TODO: process warnings? Set Code and Message to success?
         return res;
 	}
 
@@ -114,7 +112,13 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
 		if(browser != null) {
 			browser.close();
 		}
-		
 	}
 
+	public String getScript() {
+		return getPropertyAsString(SCRIPT);
+	}
+	
+	public void setScript(String script) {
+		setProperty(SCRIPT, script);
+	}
 }
