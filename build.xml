@@ -399,6 +399,7 @@
     <include name="${lib.dir}/${json.jar}"/>
     <include name="${lib.dir}/${platform.jar}"/>
     <include name="${lib.dir}/${selenium-api.jar}"/>
+    <include name="${lib.dir}/${selenium-support.jar}"/>
     <include name="${lib.dir}/${selenium-firefox.jar}"/>
     <include name="${lib.dir}/${selenium-remote.jar}"/>
   </patternset>
@@ -471,6 +472,7 @@
     <pathelement location="${lib.dir}/${json.jar}"/>
     <pathelement location="${lib.dir}/${platform.jar}"/>
     <pathelement location="${lib.dir}/${selenium-api.jar}"/>
+    <pathelement location="${lib.dir}/${selenium-support.jar}"/>
     <pathelement location="${lib.dir}/${selenium-firefox.jar}"/>
     <pathelement location="${lib.dir}/${selenium-remote.jar}"/>
     <!-- Generated jars -->
@@ -2537,6 +2539,7 @@ run JMeter unless all the JMeter jars are added.
         <process_jarfile jarname="json"/>
         <process_jarfile jarname="platform"/>
         <process_jarfile jarname="selenium-api"/>
+        <process_jarfile jarname="selenium-support"/>
         <process_jarfile jarname="selenium-firefox"/>
         <process_jarfile jarname="selenium-remote"/>
         <process_jarfile jarname="velocity"   dest.dir="${lib.doc}"/>

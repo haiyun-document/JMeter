@@ -6,9 +6,11 @@ import java.util.Properties;
 import org.apache.bsf.BSFEngine;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
+import org.apache.jmeter.engine.event.LoopIterationEvent;
 import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
+import org.apache.jmeter.testelement.TestListener;
 import org.apache.jmeter.testelement.ThreadListener;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
@@ -25,7 +27,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  * A Sampler that makes HTTP requests using a real browser (via. Selenium/WebDriver).  It currently 
  * provides a scripting mechanism via. Javascript to control the browser instance.
  */
-public class WebSampler extends AbstractSampler implements ThreadListener {
+public class WebSampler extends AbstractSampler implements TestListener, ThreadListener {
+	
+	private static final ThreadLocal<WebDriver> BROWSERS = new ThreadLocal<WebDriver>();
 
     public static final String SCRIPT = "WebSampler.script";
 
@@ -41,8 +45,8 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
     
 	@Override
 	public SampleResult sample(Entry e) {
-        LOGGER.debug("sampling web");
-
+        LOGGER.info("sampling web");
+        
         // BSF Code copied liberally from BSFSampler
         final BSFEngine bsfEngine;
         final BSFManager mgr = new BSFManager();
@@ -68,7 +72,6 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
             res.sampleEnd();
 
             res.setResponseData(browser.getPageSource().getBytes());
-            LOGGER.debug("Page title is: " + browser.getTitle());
         } catch (Exception ex) {
             res.setResponseMessage(ex.toString());
             res.setResponseCode("000");
@@ -104,19 +107,38 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
         // For use in debugging:
         mgr.declareBean("OUT", System.out, PrintStream.class); // $NON-NLS-1$
     }
-
+	
 	@Override
-	public void threadStarted() {
-		browser = new FirefoxDriver();
+	public void testStarted() {
+		LOGGER.info(Thread.currentThread().getName()+" testStarted()");
 	}
 
 	@Override
-	public void threadFinished() {
-		if(browser != null) {
-			browser.close();
+	public void testStarted(String host) {
+		LOGGER.info(Thread.currentThread().getName()+" testStarted("+host+")");
+	}
+
+	@Override
+	public void testEnded() {
+		LOGGER.info(Thread.currentThread().getName()+" testEnded()");
+		this.browser = null;
+	}
+
+	@Override
+	public void testEnded(String host) {
+		LOGGER.info(Thread.currentThread().getName()+" testEnded("+host+")");
+		this.browser = null;
+	}
+
+	@Override
+	public void testIterationStart(LoopIterationEvent event) {
+		LOGGER.info(Thread.currentThread().getName()+" testIterationStart("+event+")");
+		if(BROWSERS.get() == null) {
+			BROWSERS.set(new FirefoxDriver());
 		}
+		this.browser = BROWSERS.get();
 	}
-
+	
 	public String getScript() {
 		return getPropertyAsString(SCRIPT);
 	}
@@ -131,5 +153,21 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
 
 	public void setParameters(String parameters) {
 		setProperty(PARAMETERS, parameters);
+	}
+
+	
+	// TODO: ThreadListener code needs to be moved to Config Element
+	@Override
+	public void threadStarted() {
+		LOGGER.info(Thread.currentThread().getName()+" threadStarted()");
+	}
+
+	@Override
+	public void threadFinished() {
+		LOGGER.info(Thread.currentThread().getName()+" threadFinished()");
+		if(BROWSERS.get() != null) {
+			BROWSERS.get().quit();
+			BROWSERS.set(null);
+		}
 	}
 }
