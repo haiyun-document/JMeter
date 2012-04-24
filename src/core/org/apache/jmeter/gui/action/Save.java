@@ -134,14 +134,20 @@ public class Save implements Command {
         }
         FileOutputStream ostream = null;
         try {
+            File outFile = new File(updateFile);
+            if(!outFile.canWrite()) {
+                throw new IllegalUserActionException("File cannot be written: " + outFile.getAbsolutePath());
+            }
             ostream = new FileOutputStream(updateFile);
             SaveService.saveTree(subTree, ostream);
         } catch (Throwable ex) {
-            GuiPackage.getInstance().setTestPlanFile(null);
             log.error("", ex);
             if (ex instanceof Error){
                 throw (Error) ex;
             }
+            GuiPackage guiPack = GuiPackage.getInstance();
+            guiPack.setDirty(true);
+            guiPack.setTestPlanFile(null);
             if (ex instanceof RuntimeException){
                 throw (RuntimeException) ex;
             }
