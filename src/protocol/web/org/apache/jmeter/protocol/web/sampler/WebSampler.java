@@ -39,6 +39,10 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
 	 */
 	private static final String SCRIPT_UTILITY = "var websampler = JavaImporter(org.openqa.selenium, org.openqa.selenium.support.ui)";
 
+	/**
+	 * Each thread will reference their WebDriver (browser) instance via this ThreadLocal instance.  This is
+	 * initialised in the {@see #threadStarted()} and quit & unset in {@see #threadFinished()}.
+	 */
 	private static final ThreadLocal<WebDriver> BROWSERS = new ThreadLocal<WebDriver>();
 
     public static final String SCRIPT = "WebSampler.script";
