@@ -32,6 +32,13 @@ public class WebSamplerGui extends AbstractSamplerGui {
 		return "web";
 	}
 
+    @Override
+    public void configure(TestElement element) {
+        scriptField.setText(element.getPropertyAsString(WebSampler.SCRIPT));
+        parameters.setText(element.getPropertyAsString(WebSampler.PARAMETERS));
+        super.configure(element);
+    }
+
 	@Override
 	public TestElement createTestElement() {
 		WebSampler sampler = new WebSampler();
@@ -46,6 +53,14 @@ public class WebSamplerGui extends AbstractSamplerGui {
 		element.setProperty(WebSampler.SCRIPT, scriptField.getText());
 		element.setProperty(WebSampler.PARAMETERS, parameters.getText());
 	}
+
+    @Override
+    public void clearGui() {
+        super.clearGui();
+
+        parameters.setText(""); //$NON-NLS-1$
+        scriptField.setText(""); //$NON-NLS-1$
+    }
 
 	private void createGui() {
 		setLayout(new BorderLayout(0, 5));
