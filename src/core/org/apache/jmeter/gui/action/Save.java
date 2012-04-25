@@ -78,6 +78,7 @@ public class Save implements Command {
 
     public void doAction(ActionEvent e) throws IllegalUserActionException {
         HashTree subTree = null;
+        boolean fullSave = false; // are we saving the whole tree?
         if (!commands.contains(e.getActionCommand())) {
             throw new IllegalUserActionException("Invalid user command:" + e.getActionCommand());
         }
@@ -91,6 +92,7 @@ public class Save implements Command {
             }
             subTree = GuiPackage.getInstance().getCurrentSubTree();
         } else {
+            fullSave = true;
             subTree = GuiPackage.getInstance().getTreeModel().getTestPlan();
         }
 
@@ -124,34 +126,30 @@ public class Save implements Command {
                 GuiPackage.getInstance().setTestPlanFile(updateFile);
             }
         }
-        // TODO: doesn't putting this here mark the tree as
-        // saved even though a failure may occur later?
 
-        ActionRouter.getInstance().doActionNow(new ActionEvent(subTree, e.getID(), ActionNames.SUB_TREE_SAVED));
         try {
             convertSubTree(subTree);
         } catch (Exception err) {
+            log.warn("Error converting subtree "+err);
         }
+
         FileOutputStream ostream = null;
         try {
-            File outFile = new File(updateFile);
-            if(!outFile.canWrite()) {
-                throw new IllegalUserActionException("File cannot be written: " + outFile.getAbsolutePath());
-            }
             ostream = new FileOutputStream(updateFile);
             SaveService.saveTree(subTree, ostream);
+            if (fullSave) { // Only update the stored copy of the tree for a full save
+                subTree = GuiPackage.getInstance().getTreeModel().getTestPlan(); // refetch, because convertSubTree affects it
+                ActionRouter.getInstance().doActionNow(new ActionEvent(subTree, e.getID(), ActionNames.SUB_TREE_SAVED));
+            }
         } catch (Throwable ex) {
-            log.error("", ex);
+            log.error("Error saving tree:", ex);
             if (ex instanceof Error){
                 throw (Error) ex;
             }
-            GuiPackage guiPack = GuiPackage.getInstance();
-            guiPack.setDirty(true);
-            guiPack.setTestPlanFile(null);
             if (ex instanceof RuntimeException){
                 throw (RuntimeException) ex;
             }
-            throw new IllegalUserActionException("Couldn't save test plan to file: " + updateFile);
+            throw new IllegalUserActionException("Couldn't save test plan to file: " + updateFile, ex);
         } finally {
             JOrphanUtils.closeQuietly(ostream);
         }
