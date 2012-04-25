@@ -27,6 +27,18 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  */
 public class WebSampler extends AbstractSampler implements ThreadListener {
 	
+	/**
+	 * This declares the 'websampler' variable, which is a shorthand for accessing <code>org.openqa.selenium</code> and
+	 * <code>org.openqa.selenium.support.ui</code> classes without specifying the full package name.  The shorthand for
+	 * accessing these classes is as follows:
+	 * <pre>
+	 * with(websampler) {
+	 *     var element = browser.findElement(By.id('myId'));
+	 * }
+	 * </pre>
+	 */
+	private static final String SCRIPT_UTILITY = "var websampler = JavaImporter(org.openqa.selenium, org.openqa.selenium.support.ui)";
+
 	private static final ThreadLocal<WebDriver> BROWSERS = new ThreadLocal<WebDriver>();
 
     public static final String SCRIPT = "WebSampler.script";
@@ -34,11 +46,9 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
 	public static final String PARAMETERS = "WebSampler.parameters";
     
 	private static final Logger LOGGER = LoggingManager.getLoggerForClass();
-    
+	
 	private static final long serialVersionUID = 234L;
 	
-	private static final ByFacade BY = new ByFacade();
-
 	@Override
 	public SampleResult sample(Entry e) {
         LOGGER.info("sampling web");
@@ -63,6 +73,8 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
             initManager(mgr);
             bsfEngine = mgr.loadScriptingEngine("javascript");
             
+            // utility importer
+            bsfEngine.exec("script", 0, 0, SCRIPT_UTILITY);
             res.sampleStart();
             bsfEngine.exec("script", 0, 0, getScript());
             res.sampleEnd();
@@ -99,7 +111,6 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
         mgr.declareBean("props", props, props.getClass()); // $NON-NLS-1$
         // web specific classes
         mgr.declareBean("browser", BROWSERS.get(), WebDriver.class);
-        mgr.declareBean("by", BY, ByFacade.class);
         // For use in debugging:
         mgr.declareBean("OUT", System.out, PrintStream.class); // $NON-NLS-1$
     }
