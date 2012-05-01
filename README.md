@@ -20,14 +20,16 @@ Run the following commands to show the GUI
 
 If everything works, then the JMeter GUI will be shown.
 
+![JMeter GUI](https://github.com/cplim/JMeter/raw/master/gh-docs/images/JMeter.png)
+
 ### Create a Web Sampler
 In the GUI, right click on the test plan to create a **Thread Group**.
 
 Then right click on the Thread Group to add a **Web Browser** Sampler.
 
 ## Create a Test script
-In the script pane enter the following commands to change the URL for the Web Browser.
+In the **Script** pane enter the following commands to change the URL for the Web Browser.
 
-    browser.get('http://www.google.com.au');
+    browser.get('http://www.google.com');
 
 Run the test by pressing the **Start** button.  The browser should appear and it should go to Google and then finish.
