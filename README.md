@@ -25,11 +25,25 @@ If everything works, then the JMeter GUI will be shown.
 ### Create a Web Sampler
 In the GUI, right click on the test plan to create a **Thread Group**.
 
+![JMeter Thread Group Popup](https://github.com/cplim/JMeter/raw/master/gh-docs/images/JMeter-thread-group-popup.png)
+
+Once created, the **Thread Group** contents should be displayed.
+
+![JMeter Thread Group Display](https://github.com/cplim/JMeter/raw/master/gh-docs/images/JMeter-thread-group.png)
+
 Then right click on the Thread Group to add a **Web Browser** Sampler.
+
+![JMeter Web Sampler Popup](https://github.com/cplim/JMeter/raw/master/gh-docs/images/JMeter-web-sampler-popup.png)
+
+The **Web Browser** Sampler contents should be displayed.
+
+![JMeter Web Sampler Display](https://github.com/cplim/JMeter/raw/master/gh-docs/images/JMeter-web-sampler.png)
 
 ## Create a Test script
 In the **Script** pane enter the following commands to change the URL for the Web Browser.
 
     browser.get('http://www.google.com');
+
+![JMeter Web Sampler Script](https://github.com/cplim/JMeter/raw/master/gh-docs/images/JMeter-web-sampler-script.png)
 
 Run the test by pressing the **Start** button.  The browser should appear and it should go to Google and then finish.
