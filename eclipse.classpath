@@ -92,9 +92,6 @@
 	<classpathentry kind="lib" path="lib/selenium-firefox-driver-2.21.0.jar"/>
 	<classpathentry kind="lib" path="lib/selenium-remote-driver-2.21.0.jar"/>
 	<classpathentry kind="lib" path="lib/xstream-1.4.2.jar"/>
-  <!-- Needed for build and test -->
-	<classpathentry kind="lib" path="lib/api/bcmail-jdk15-1.45.jar"/>
-	<classpathentry kind="lib" path="lib/api/bcprov-jdk15-1.45.jar"/>
 	<classpathentry kind="lib" path="lib/cglib-nodep-2.1_3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-exec-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/guava-11.0.1.jar"/>
@@ -105,5 +102,8 @@
 	<classpathentry kind="lib" path="lib/selenium-api-2.21.0.jar"/>
 	<classpathentry kind="lib" path="lib/selenium-firefox-driver-2.21.0.jar"/>
 	<classpathentry kind="lib" path="lib/selenium-remote-driver-2.21.0.jar"/>
+  <!-- Needed for build and test -->
+	<classpathentry kind="lib" path="lib/api/bcmail-jdk15-1.45.jar"/>
+	<classpathentry kind="lib" path="lib/api/bcprov-jdk15-1.45.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
