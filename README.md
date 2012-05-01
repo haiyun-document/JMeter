@@ -46,4 +46,6 @@ In the **Script** pane enter the following commands to change the URL for the We
 
 ![JMeter Web Sampler Script](https://github.com/cplim/JMeter/raw/master/gh-docs/images/JMeter-web-sampler-script.png)
 
-Run the test by pressing the **Start** button.  The browser should appear and it should go to Google and then finish.
+Run the test by pressing the **Start** button.  The browser should appear and it should go to Google as shown below.
+
+![JMeter Web Sampler Browser](https://github.com/cplim/JMeter/raw/master/gh-docs/images/JMeter-web-sampler-browser.png)
