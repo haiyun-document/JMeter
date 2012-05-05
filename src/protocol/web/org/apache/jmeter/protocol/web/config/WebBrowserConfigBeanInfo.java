@@ -8,14 +8,10 @@ import java.beans.PropertyDescriptor;
 
 public class WebBrowserConfigBeanInfo extends BeanInfoSupport {
     private static final Logger LOGGER = LoggingManager.getLoggerForClass();
-    public static final String CACHE_SETTINGS = "cacheSettings";
-    public static final String ITERATION_LOOP_SETTINGS = "iterationLoopSettings";
-    public static final String DO_NOT_CLEAR = "retain its cookies and cache";
-    public static final String CLEAR_ALL = "clear all cookies and cache (creates a new browser)";
-
-    static {
-
-    }
+    private static final String CACHE_SETTINGS = "cacheSettings";
+    private static final String ITERATION_LOOP_SETTINGS = "iterationLoopSettings";
+    static final String DO_NOT_CLEAR = "retain its cookies and cache";
+    static final String CLEAR_ALL = "clear all cookies and cache (creates a new browser)";
 
     public WebBrowserConfigBeanInfo() {
         super(WebBrowserConfig.class);

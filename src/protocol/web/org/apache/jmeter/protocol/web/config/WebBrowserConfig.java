@@ -26,6 +26,8 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Loo
 
     @Override
     public void iterationStart(LoopIterationEvent iterEvent) {
-        LOGGER.info("Iteration Start called");
+        if(WebBrowserConfigBeanInfo.CLEAR_ALL.equals(cacheSettings)) {
+            LOGGER.info("resetting browser!");
+        }
     }
 }
