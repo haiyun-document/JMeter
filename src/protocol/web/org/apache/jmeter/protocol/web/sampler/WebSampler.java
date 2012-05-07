@@ -39,12 +39,6 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
 	 */
 	private static final String SCRIPT_UTILITY = "var websampler = JavaImporter(org.openqa.selenium, org.openqa.selenium.support.ui)";
 
-	/**
-	 * Each thread will reference their WebDriver (browser) instance via this ThreadLocal instance.  This is
-	 * initialised in the {@see #threadStarted()} and quit & unset in {@see #threadFinished()}.
-	 */
-	private static final ThreadLocal<WebDriver> BROWSERS = new ThreadLocal<WebDriver>();
-
     public static final String SCRIPT = "WebSampler.script";
 
 	public static final String PARAMETERS = "WebSampler.parameters";
@@ -83,7 +77,7 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
             bsfEngine.exec("script", 0, 0, getScript());
             res.sampleEnd();
 
-            res.setResponseData(BROWSERS.get().getPageSource().getBytes());
+            res.setResponseData(BrowserFactory.getInstance().getBrowser().getPageSource().getBytes());
         } catch (Exception ex) {
             res.setResponseMessage(ex.toString());
             res.setResponseCode("000");
@@ -114,7 +108,7 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
         mgr.declareBean("vars", vars, vars.getClass()); // $NON-NLS-1$
         mgr.declareBean("props", props, props.getClass()); // $NON-NLS-1$
         // web specific classes
-        mgr.declareBean("browser", BROWSERS.get(), WebDriver.class);
+        mgr.declareBean("browser", BrowserFactory.getInstance().getBrowser(), WebDriver.class);
         // For use in debugging:
         mgr.declareBean("OUT", System.out, PrintStream.class); // $NON-NLS-1$
     }
@@ -138,17 +132,11 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
 	@Override
 	public void threadStarted() {
 		LOGGER.info(Thread.currentThread().getName()+" threadStarted()");
-		if(BROWSERS.get() == null) {
-			BROWSERS.set(new FirefoxDriver());
-		}
 	}
 
 	@Override
 	public void threadFinished() {
 		LOGGER.info(Thread.currentThread().getName()+" threadFinished()");
-		if(BROWSERS.get() != null) {
-			BROWSERS.get().quit();
-			BROWSERS.set(null);
-		}
+        BrowserFactory.getInstance().clearBrowser();
 	}
 }
