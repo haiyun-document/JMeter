@@ -28,8 +28,11 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Loo
     @Override
     public void iterationStart(LoopIterationEvent iterEvent) {
         if(WebBrowserConfigBeanInfo.CLEAR_ALL.equals(cacheSettings)) {
-            LOGGER.info("resetting browser!");
+            LOGGER.info("resetting browser");
             BrowserFactory.getInstance().clearBrowser();
+        } else if(WebBrowserConfigBeanInfo.CLEAR_COOKIES.equals(cacheSettings)) {
+            LOGGER.info("clearing cookies");
+            BrowserFactory.getInstance().getBrowser().manage().deleteAllCookies();
         }
     }
 }
