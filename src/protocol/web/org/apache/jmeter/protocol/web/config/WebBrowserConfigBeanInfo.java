@@ -11,6 +11,7 @@ public class WebBrowserConfigBeanInfo extends BeanInfoSupport {
     private static final String CACHE_SETTINGS = "cacheSettings";
     private static final String ITERATION_LOOP_SETTINGS = "iterationLoopSettings";
     static final String DO_NOT_CLEAR = "retain its cookies and cache";
+    static final String CLEAR_COOKIES = "clear its cookies";
     static final String CLEAR_ALL = "clear all cookies and cache (creates a new browser)";
 
     public WebBrowserConfigBeanInfo() {
@@ -23,6 +24,6 @@ public class WebBrowserConfigBeanInfo extends BeanInfoSupport {
         p.setValue(DEFAULT, DO_NOT_CLEAR);
         p.setValue(NOT_OTHER, Boolean.TRUE);
         p.setValue(NOT_EXPRESSION, Boolean.TRUE);
-        p.setValue(TAGS, new String[] {DO_NOT_CLEAR, CLEAR_ALL});
+        p.setValue(TAGS, new String[] {DO_NOT_CLEAR, CLEAR_COOKIES, CLEAR_ALL});
     }
 }
