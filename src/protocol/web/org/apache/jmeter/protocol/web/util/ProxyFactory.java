@@ -18,10 +18,10 @@ public class ProxyFactory {
      */
     public Proxy getManualProxy(String httpProxy, String httpsProxy, String ftpProxy) {
         final Proxy proxy = new Proxy();
+        proxy.setProxyType(Proxy.ProxyType.MANUAL);
         proxy.setHttpProxy(httpProxy);
         proxy.setSslProxy(httpsProxy);
         proxy.setFtpProxy(ftpProxy);
-        proxy.setProxyType(Proxy.ProxyType.MANUAL);
         return proxy;
     }
 
@@ -45,8 +45,8 @@ public class ProxyFactory {
      */
     public Proxy getUrlProxy(String pacUrl) {
         final Proxy proxy = new Proxy();
-        proxy.setProxyAutoconfigUrl(pacUrl);
         proxy.setProxyType(Proxy.ProxyType.PAC);
+        proxy.setProxyAutoconfigUrl(pacUrl);
         return proxy;
     }
 
@@ -57,6 +57,7 @@ public class ProxyFactory {
      */
     public Proxy getAutodetectProxy() {
         final Proxy proxy = new Proxy();
+        proxy.setProxyType(Proxy.ProxyType.AUTODETECT);
         proxy.setAutodetect(true);
         return proxy;
     }
