@@ -17,12 +17,9 @@ public class BrowserFactory {
      */
     private static final ThreadLocal<WebDriver> BROWSERS = new ThreadLocal<WebDriver>();
 
-    /**
-     * Each thread will store its own {@see Proxy} instance.
-     */
-    private final ThreadLocal<Proxy> PROXIES = new ThreadLocal<Proxy>();
-
     private static final BrowserFactory INSTANCE = new BrowserFactory();
+
+    private Proxy proxy;
 
     public static BrowserFactory getInstance() {
         return INSTANCE;
@@ -39,9 +36,9 @@ public class BrowserFactory {
     public WebDriver getBrowser() {
         if(BROWSERS.get() == null) {
             WebDriver browser = null;
-            if(PROXIES.get() != null) {
+            if(proxy != null) {
                 final DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-                capabilities.setCapability(CapabilityType.PROXY, PROXIES.get());
+                capabilities.setCapability(CapabilityType.PROXY, proxy);
                 browser = new FirefoxDriver(capabilities);
             }
             else {
@@ -64,13 +61,12 @@ public class BrowserFactory {
     }
 
     /**
-     * Use this to set the proxy to use when getting/creating new WebDriver instances {#getBrowser} for each thread.  If the browser
-     * has already been accessed (ie. created and set) on a thread, first call {#clearBrowser} then call this method
-     * to make sure that the proxy will be used when {#getBrowser} is next invoked.
+     * Use this to set the proxy to use when getting/creating new WebDriver instances {#getBrowser}.  Unlike the browsers
+     * this setting spans across threads, so there is no per thread configured values.
      *
      * @param proxy is the proxy to use when {#getBrowser} is invoked.
      */
     public void setProxy(Proxy proxy) {
-        PROXIES.set(proxy);
+        this.proxy = proxy;
     }
 }

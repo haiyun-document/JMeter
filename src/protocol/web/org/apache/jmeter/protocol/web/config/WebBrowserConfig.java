@@ -4,11 +4,14 @@ import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.engine.event.LoopIterationEvent;
 import org.apache.jmeter.engine.event.LoopIterationListener;
 import org.apache.jmeter.protocol.web.sampler.BrowserFactory;
+import org.apache.jmeter.protocol.web.util.ProxyFactory;
 import org.apache.jmeter.testbeans.TestBean;
+import org.apache.jmeter.testelement.TestListener;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
+import org.openqa.selenium.Proxy;
 
-public class WebBrowserConfig extends ConfigTestElement implements TestBean, LoopIterationListener {
+public class WebBrowserConfig extends ConfigTestElement implements TestBean, TestListener {
     private static final Logger LOGGER = LoggingManager.getLoggerForClass();
 
     private transient String cacheSettings;
@@ -18,8 +21,15 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Loo
     private transient String httpsProxy;
     private transient String ftpProxy;
 
+    private final ProxyFactory proxyFactory;
+
     public WebBrowserConfig() {
+        this(new ProxyFactory());
         LOGGER.info("constructed web config");
+    }
+
+    WebBrowserConfig(ProxyFactory proxyFactory) {
+        this.proxyFactory = proxyFactory;
     }
 
     public String getCacheSettings() {
@@ -71,7 +81,7 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Loo
     }
 
     @Override
-    public void iterationStart(LoopIterationEvent iterEvent) {
+    public void testIterationStart(LoopIterationEvent event) {
         if(WebBrowserConfigBeanInfo.CLEAR_ALL.equals(cacheSettings)) {
             LOGGER.info("resetting browser");
             BrowserFactory.getInstance().clearBrowser();
@@ -81,4 +91,35 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Loo
         }
     }
 
+    @Override
+    public void testStarted() {
+        Proxy proxy = null;
+        if(WebBrowserConfigBeanInfo.PROXY_PAC.equals(proxySettings)) {
+            proxy = proxyFactory.getUrlProxy(pacUrl);
+        }
+        else if(WebBrowserConfigBeanInfo.PROXY_MANUAL.equals(proxySettings)) {
+            proxy = proxyFactory.getManualProxy(httpProxy, httpsProxy, ftpProxy);
+        }
+        else if(WebBrowserConfigBeanInfo.PROXY_DIRECT.equals(proxySettings)) {
+            proxy = proxyFactory.getDirectProxy();
+        }
+        else {
+            proxy = proxyFactory.getAutodetectProxy();
+        }
+        BrowserFactory.getInstance().setProxy(proxy);
+    }
+
+    @Override
+    public void testStarted(String host) {
+        testStarted();
+    }
+
+    @Override
+    public void testEnded() {
+    }
+
+    @Override
+    public void testEnded(String host) {
+        testEnded();
+    }
 }
