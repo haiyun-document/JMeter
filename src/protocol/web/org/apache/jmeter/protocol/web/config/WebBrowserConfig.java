@@ -11,7 +11,7 @@ import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
 import org.openqa.selenium.Proxy;
 
-public class WebBrowserConfig extends ConfigTestElement implements TestBean, TestListener {
+public class WebBrowserConfig extends ConfigTestElement implements TestBean, TestListener, LoopIterationListener {
     private static final Logger LOGGER = LoggingManager.getLoggerForClass();
 
     private transient String cacheSettings;
@@ -82,13 +82,6 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Tes
 
     @Override
     public void testIterationStart(LoopIterationEvent event) {
-        if(WebBrowserConfigBeanInfo.CLEAR_ALL.equals(cacheSettings)) {
-            LOGGER.info("resetting browser");
-            BrowserFactory.getInstance().clearBrowser();
-        } else if(WebBrowserConfigBeanInfo.CLEAR_COOKIES.equals(cacheSettings)) {
-            LOGGER.info("clearing cookies");
-            BrowserFactory.getInstance().getBrowser().manage().deleteAllCookies();
-        }
     }
 
     @Override
@@ -121,5 +114,16 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Tes
     @Override
     public void testEnded(String host) {
         testEnded();
+    }
+
+    @Override
+    public void iterationStart(LoopIterationEvent iterEvent) {
+        if(WebBrowserConfigBeanInfo.CLEAR_ALL.equals(cacheSettings)) {
+            LOGGER.info("resetting browser");
+            BrowserFactory.getInstance().clearBrowser();
+        } else if(WebBrowserConfigBeanInfo.CLEAR_COOKIES.equals(cacheSettings)) {
+            LOGGER.info("clearing cookies");
+            BrowserFactory.getInstance().getBrowser().manage().deleteAllCookies();
+        }
     }
 }
