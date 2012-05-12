@@ -12,6 +12,11 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Loo
     private static final Logger LOGGER = LoggingManager.getLoggerForClass();
 
     private transient String cacheSettings;
+    private transient String proxySettings;
+    private transient String pacUrl;
+    private transient String httpProxy;
+    private transient String httpsProxy;
+    private transient String ftpProxy;
 
     public WebBrowserConfig() {
         LOGGER.info("constructed web config");
@@ -25,6 +30,46 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Loo
         this.cacheSettings = cacheSettings;
     }
 
+    public String getProxySettings() {
+        return proxySettings;
+    }
+
+    public void setProxySettings(String proxySettings) {
+        this.proxySettings = proxySettings;
+    }
+
+    public String getPacUrl() {
+        return pacUrl;
+    }
+
+    public void setPacUrl(String pacUrl) {
+        this.pacUrl = pacUrl;
+    }
+
+    public String getHttpProxy() {
+        return httpProxy;
+    }
+
+    public void setHttpProxy(String httpProxy) {
+        this.httpProxy = httpProxy;
+    }
+
+    public String getHttpsProxy() {
+        return httpsProxy;
+    }
+
+    public void setHttpsProxy(String httpsProxy) {
+        this.httpsProxy = httpsProxy;
+    }
+
+    public String getFtpProxy() {
+        return ftpProxy;
+    }
+
+    public void setFtpProxy(String ftpProxy) {
+        this.ftpProxy = ftpProxy;
+    }
+
     @Override
     public void iterationStart(LoopIterationEvent iterEvent) {
         if(WebBrowserConfigBeanInfo.CLEAR_ALL.equals(cacheSettings)) {
@@ -35,4 +80,5 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Loo
             BrowserFactory.getInstance().getBrowser().manage().deleteAllCookies();
         }
     }
+
 }

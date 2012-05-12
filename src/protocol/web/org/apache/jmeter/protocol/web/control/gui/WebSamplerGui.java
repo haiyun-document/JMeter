@@ -18,8 +18,7 @@ public class WebSamplerGui extends AbstractSamplerGui {
 
 	private static final long serialVersionUID = -3484685528176139410L;
 
-	private JTextField parameters;// parameters to pass to script file (or
-									// script)
+	private JTextField parameters;// parameters to pass to script file (or script)
 
 	private JTextArea scriptField;// script area
 
