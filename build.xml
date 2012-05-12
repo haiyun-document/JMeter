@@ -2542,6 +2542,17 @@ run JMeter unless all the JMeter jars are added.
         <process_jarfile jarname="selenium-support"/>
         <process_jarfile jarname="selenium-firefox"/>
         <process_jarfile jarname="selenium-remote"/>
+        <process_jarfile jarname="mockito-all" dest.dir="${lib.opt}"/>
+        <process_jarfile jarname="javassist" dest.dir="${lib.opt}"/>
+        <process_jarfile jarname="powermock-core" dest.dir="${lib.opt}"/>
+        <process_jarfile jarname="powermock-reflect" dest.dir="${lib.opt}"/>
+        <process_jarfile jarname="powermock-support" dest.dir="${lib.opt}"/>
+        <process_jarfile jarname="powermock-base" dest.dir="${lib.opt}"/>
+        <process_jarfile jarname="powermock-rule" dest.dir="${lib.opt}"/>
+        <process_jarfile jarname="powermock-xstream" dest.dir="${lib.opt}"/>
+        <process_jarfile jarname="powermock-mockito" dest.dir="${lib.opt}"/>
+        <process_jarfile jarname="powermock-junit4" dest.dir="${lib.opt}"/>
+        <process_jarfile jarname="powermock-common" dest.dir="${lib.opt}"/>
         <process_jarfile jarname="velocity"   dest.dir="${lib.doc}"/>
     </target>
 

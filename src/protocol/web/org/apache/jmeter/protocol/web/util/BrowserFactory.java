@@ -1,6 +1,5 @@
-package org.apache.jmeter.protocol.web.sampler;
+package org.apache.jmeter.protocol.web.util;
 
-import org.apache.jmeter.protocol.web.util.ProxyFactory;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;

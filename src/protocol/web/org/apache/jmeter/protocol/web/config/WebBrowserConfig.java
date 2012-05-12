@@ -3,7 +3,7 @@ package org.apache.jmeter.protocol.web.config;
 import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.engine.event.LoopIterationEvent;
 import org.apache.jmeter.engine.event.LoopIterationListener;
-import org.apache.jmeter.protocol.web.sampler.BrowserFactory;
+import org.apache.jmeter.protocol.web.util.BrowserFactory;
 import org.apache.jmeter.protocol.web.util.ProxyFactory;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testelement.TestListener;
@@ -25,7 +25,6 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Tes
 
     public WebBrowserConfig() {
         this(new ProxyFactory());
-        LOGGER.info("constructed web config");
     }
 
     WebBrowserConfig(ProxyFactory proxyFactory) {
@@ -119,10 +118,8 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Tes
     @Override
     public void iterationStart(LoopIterationEvent iterEvent) {
         if(WebBrowserConfigBeanInfo.CLEAR_ALL.equals(cacheSettings)) {
-            LOGGER.info("resetting browser");
             BrowserFactory.getInstance().clearBrowser();
         } else if(WebBrowserConfigBeanInfo.CLEAR_COOKIES.equals(cacheSettings)) {
-            LOGGER.info("clearing cookies");
             BrowserFactory.getInstance().getBrowser().manage().deleteAllCookies();
         }
     }
