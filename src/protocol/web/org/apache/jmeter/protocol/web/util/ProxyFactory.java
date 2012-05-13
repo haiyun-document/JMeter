@@ -7,6 +7,14 @@ import org.openqa.selenium.Proxy;
  */
 public class ProxyFactory {
 
+    private static final ProxyFactory INSTANCE = new ProxyFactory();
+
+    public static final ProxyFactory getInstance() {
+        return INSTANCE;
+    }
+
+    private ProxyFactory() {}
+
     /**
      * This returns a {@see Proxy} with HTTP, HTTPS and FTP hosts and ports configured as specified.
      *

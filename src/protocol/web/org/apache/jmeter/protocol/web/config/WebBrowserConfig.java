@@ -21,14 +21,7 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Tes
     private transient String httpsProxy;
     private transient String ftpProxy;
 
-    private final ProxyFactory proxyFactory;
-
     public WebBrowserConfig() {
-        this(new ProxyFactory());
-    }
-
-    WebBrowserConfig(ProxyFactory proxyFactory) {
-        this.proxyFactory = proxyFactory;
     }
 
     public String getCacheSettings() {
@@ -87,16 +80,16 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Tes
     public void testStarted() {
         Proxy proxy = null;
         if(WebBrowserConfigBeanInfo.PROXY_PAC.equals(proxySettings)) {
-            proxy = proxyFactory.getUrlProxy(pacUrl);
+            proxy = ProxyFactory.getInstance().getUrlProxy(pacUrl);
         }
         else if(WebBrowserConfigBeanInfo.PROXY_MANUAL.equals(proxySettings)) {
-            proxy = proxyFactory.getManualProxy(httpProxy, httpsProxy, ftpProxy);
+            proxy = ProxyFactory.getInstance().getManualProxy(httpProxy, httpsProxy, ftpProxy);
         }
         else if(WebBrowserConfigBeanInfo.PROXY_DIRECT.equals(proxySettings)) {
-            proxy = proxyFactory.getDirectProxy();
+            proxy = ProxyFactory.getInstance().getDirectProxy();
         }
         else {
-            proxy = proxyFactory.getAutodetectProxy();
+            proxy = ProxyFactory.getInstance().getAutodetectProxy();
         }
         BrowserFactory.getInstance().setProxy(proxy);
     }

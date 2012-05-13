@@ -13,7 +13,7 @@ public class ProxyFactoryTest {
 
     @Before
     public void initFactory() {
-        factory = new ProxyFactory();
+        factory = ProxyFactory.getInstance();
     }
 
     @Test

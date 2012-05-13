@@ -1,9 +1,8 @@
 package org.apache.jmeter.protocol.web.util;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.isA;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.mockito.Mockito.verify;
 
@@ -11,8 +10,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -23,7 +26,7 @@ import java.util.Vector;
 @PrepareForTest(BrowserFactory.class)
 public class BrowserFactoryTest {
     /**
-     * Used to store the browsers created by {#BrowserCreator}.
+     * Used to store the browsers created by {#BrowserCreator} threads.
      */
     private final List<WebDriver> browsers = new Vector<WebDriver>();
 
@@ -42,7 +45,8 @@ public class BrowserFactoryTest {
 
     @Before
     public void initFactory() {
-        this.factory = BrowserFactory.getInstance();
+        factory = BrowserFactory.getInstance();
+        factory.setProxy(null);
     }
 
     @After
@@ -63,7 +67,19 @@ public class BrowserFactoryTest {
         WebDriver secondBrowser = factory.getBrowser();
         assertThat(firstBrowser, is(sameInstance(secondBrowser)));
 
-        verifyNew(FirefoxDriver.class);
+        verifyNew(FirefoxDriver.class, Mockito.times(1)).withNoArguments();
+    }
+
+    @Test
+    public void shouldBrowserShouldContainProxySettingsWhenSpecified() throws Exception {
+        FirefoxDriver mockBrowser = mock(FirefoxDriver.class);
+        whenNew(FirefoxDriver.class).withParameterTypes(Capabilities.class).withArguments(isA(DesiredCapabilities.class)).thenReturn(mockBrowser);
+
+        factory.setProxy(new Proxy());
+        WebDriver browser = factory.getBrowser();
+        assertThat(browser, is(not(nullValue())));
+
+        verifyNew(FirefoxDriver.class, Mockito.times(1)).withArguments(isA(DesiredCapabilities.class));
     }
 
     @Test
@@ -78,7 +94,7 @@ public class BrowserFactoryTest {
 
         assertThat(afterReset, is(not(sameInstance(beforeReset))));
 
-        verifyNew(FirefoxDriver.class);
+        verifyNew(FirefoxDriver.class, Mockito.times(2)).withNoArguments();
     }
 
     @Test
@@ -99,7 +115,7 @@ public class BrowserFactoryTest {
         assertThat(browsers.size(), is(2));
         assertThat(browsers.get(0), is(not(sameInstance(browsers.get(1)))));
 
-        verifyNew(FirefoxDriver.class);
+        verifyNew(FirefoxDriver.class, Mockito.times(2)).withNoArguments();
     }
 
 }

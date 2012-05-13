@@ -3656,6 +3656,13 @@ GUI that they can use while developing new JMeter components.</p>
 
 </component>
 
+<component name="Web Browser" index="&sect-num;.4.18"  width="465" height="375" screenshot="ldap_defaults.png">
+  <description><p>TBC</p></description>
+</component>
+
+<component name="Web Browser Config" index="&sect-num;.4.19"  width="465" height="375" screenshot="ldap_defaults.png">
+  <description><p>TBC</p></description>
+</component>
 
 <a href="#">^</a>
 
