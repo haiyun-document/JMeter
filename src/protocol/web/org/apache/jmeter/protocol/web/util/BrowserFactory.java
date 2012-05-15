@@ -68,4 +68,13 @@ public class BrowserFactory {
     public void setProxy(Proxy proxy) {
         this.proxy = proxy;
     }
+
+    /**
+     * Access the proxy configured for all browsers accessed from this factory.
+     * 
+     * @return the configured proxy.
+     */
+	public Proxy getProxy() {
+		return proxy;
+	}
 }
