@@ -1,11 +1,14 @@
 package org.apache.jmeter.protocol.web.config;
 
 import org.apache.jmeter.config.ConfigTestElement;
+import org.apache.jmeter.engine.event.LoopIterationEvent;
 import org.apache.jmeter.protocol.web.util.BrowserFactory;
 import org.apache.jmeter.protocol.web.util.ProxyFactory;
+import org.apache.jmeter.testbeans.TestBean;
+import org.apache.jmeter.testelement.TestListener;
 import org.openqa.selenium.Proxy;
 
-public class WebBrowserProxyConfig extends ConfigTestElement {
+public class WebBrowserProxyConfig extends ConfigTestElement implements TestBean, TestListener {
 		
 	private static final String FTP_PROXY = "WebBrowserProxyConfig.ftpProxy";
 
@@ -61,19 +64,37 @@ public class WebBrowserProxyConfig extends ConfigTestElement {
 
 	public void testStarted() {
         Proxy proxy = null;
-        if(WebBrowserConfigBeanInfo.PROXY_PAC.equals(getProxySettings())) {
+        if(WebBrowserProxyConfigBeanInfo.PROXY_PAC.equals(getProxySettings())) {
             proxy = ProxyFactory.getInstance().getUrlProxy(getPacUrl());
         }
-        else if(WebBrowserConfigBeanInfo.PROXY_MANUAL.equals(getProxySettings())) {
+        else if(WebBrowserProxyConfigBeanInfo.PROXY_MANUAL.equals(getProxySettings())) {
             proxy = ProxyFactory.getInstance().getManualProxy(getHttpProxy(), getHttpsProxy(), getFtpProxy());
         }
-        else if(WebBrowserConfigBeanInfo.PROXY_DIRECT.equals(getProxySettings())) {
+        else if(WebBrowserProxyConfigBeanInfo.PROXY_DIRECT.equals(getProxySettings())) {
             proxy = ProxyFactory.getInstance().getDirectProxy();
         }
         else {
             proxy = ProxyFactory.getInstance().getAutodetectProxy();
         }
         BrowserFactory.getInstance().setProxy(proxy);
+	}
+
+	@Override
+	public void testStarted(String host) {
+		testStarted();
+	}
+
+	@Override
+	public void testEnded() {
+	}
+
+	@Override
+	public void testEnded(String host) {
+		testEnded();
+	}
+
+	@Override
+	public void testIterationStart(LoopIterationEvent event) {
 	}
 
 }
