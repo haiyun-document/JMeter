@@ -4,15 +4,15 @@ import java.beans.PropertyDescriptor;
 
 import org.apache.jmeter.testbeans.BeanInfoSupport;
 
-public class WebBrowserConfigBeanInfo extends BeanInfoSupport {
+public class WebBrowserCacheConfigBeanInfo extends BeanInfoSupport {
     private static final String CACHE_SETTINGS = "cacheSettings";
     private static final String ITERATION_LOOP_SETTINGS = "iterationLoopSettings";
     static final String DO_NOT_CLEAR = "retain its cookies and cache";
     static final String CLEAR_COOKIES = "clear its cookies";
     static final String CLEAR_ALL = "clear all cookies and cache (creates a new browser)";
 
-    public WebBrowserConfigBeanInfo() {
-        super(WebBrowserConfig.class);
+    public WebBrowserCacheConfigBeanInfo() {
+        super(WebBrowserCacheConfig.class);
 
         PropertyDescriptor p = null;
 

@@ -8,12 +8,12 @@ import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
 
-public class WebBrowserConfig extends ConfigTestElement implements TestBean, LoopIterationListener {
+public class WebBrowserCacheConfig extends ConfigTestElement implements TestBean, LoopIterationListener {
     private static final Logger LOGGER = LoggingManager.getLoggerForClass();
 
     private transient String cacheSettings;
 
-    public WebBrowserConfig() {
+    public WebBrowserCacheConfig() {
     }
 
     public String getCacheSettings() {
@@ -26,9 +26,9 @@ public class WebBrowserConfig extends ConfigTestElement implements TestBean, Loo
 
     @Override
     public void iterationStart(LoopIterationEvent iterEvent) {
-        if(WebBrowserConfigBeanInfo.CLEAR_ALL.equals(cacheSettings)) {
+        if(WebBrowserCacheConfigBeanInfo.CLEAR_ALL.equals(cacheSettings)) {
             BrowserFactory.getInstance().clearBrowser();
-        } else if(WebBrowserConfigBeanInfo.CLEAR_COOKIES.equals(cacheSettings)) {
+        } else if(WebBrowserCacheConfigBeanInfo.CLEAR_COOKIES.equals(cacheSettings)) {
             BrowserFactory.getInstance().getBrowser().manage().deleteAllCookies();
         }
     }
