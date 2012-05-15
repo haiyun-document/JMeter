@@ -4,7 +4,9 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.isA;
 import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
@@ -68,6 +70,19 @@ public class BrowserFactoryTest {
         assertThat(firstBrowser, is(sameInstance(secondBrowser)));
 
         verifyNew(FirefoxDriver.class, Mockito.times(1)).withNoArguments();
+    }
+
+    @Test
+    public void shouldClearCookiesOnCurrentBrowserWhenClearCookiesIsInvoked() throws Exception {
+        FirefoxDriver mockBrowser = mock(FirefoxDriver.class);
+        whenNew(FirefoxDriver.class).withNoArguments().thenReturn(mockBrowser);
+		WebDriver.Options mockOptions = mock(WebDriver.Options.class);
+		when(mockBrowser.manage()).thenReturn(mockOptions);
+
+        factory.clearBrowserCookies();
+
+        verifyNew(FirefoxDriver.class, Mockito.times(1)).withNoArguments();
+        verify(mockOptions).deleteAllCookies();
     }
 
     @Test

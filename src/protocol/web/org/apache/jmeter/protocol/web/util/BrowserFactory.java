@@ -48,6 +48,13 @@ public class BrowserFactory {
 
         return BROWSERS.get();
     }
+    
+    /**
+     * Removes all cookies in the current browser used by the running thread.
+     */
+    public void clearBrowserCookies() {
+    	getBrowser().manage().deleteAllCookies();
+    }
 
     /**
      * Removes any WebDriver instance associated with the calling thread and quits the running browser instance.
