@@ -74,10 +74,14 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
             // utility importer
             bsfEngine.exec("script", 0, 0, SCRIPT_UTILITY);
             res.sampleStart();
-            bsfEngine.exec("script", 0, 0, getScript());
+            Object outcome = bsfEngine.eval("script", 0, 0, getScript());
             res.sampleEnd();
 
+            // setup status and data useful for verification
             res.setResponseData(BrowserFactory.getInstance().getBrowser().getPageSource().getBytes());
+            if(outcome instanceof Boolean) { // only set this if the return value is boolean
+                res.setSuccessful((Boolean) outcome);
+            }
         } catch (Exception ex) {
             res.setResponseMessage(ex.toString());
             res.setResponseCode("000");
@@ -99,14 +103,7 @@ public class WebSampler extends AbstractSampler implements ThreadListener {
         mgr.declareBean("Parameters", scriptParameters, String.class); // $NON-NLS-1$
         String [] args=JOrphanUtils.split(scriptParameters, " ");//$NON-NLS-1$
         mgr.declareBean("args",args,args.getClass());//$NON-NLS-1$
-        // Add variables for access to context and variables
-        JMeterContext jmctx = JMeterContextService.getContext();
-        JMeterVariables vars = jmctx.getVariables();
-        Properties props = JMeterUtils.getJMeterProperties();
 
-        mgr.declareBean("ctx", jmctx, jmctx.getClass()); // $NON-NLS-1$
-        mgr.declareBean("vars", vars, vars.getClass()); // $NON-NLS-1$
-        mgr.declareBean("props", props, props.getClass()); // $NON-NLS-1$
         // web specific classes
         mgr.declareBean("browser", BrowserFactory.getInstance().getBrowser(), WebDriver.class);
         // For use in debugging:
