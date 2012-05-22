@@ -1,11 +1,18 @@
-JMeter with WebDriver
-=====================
+The problem
+===========
+A large part of performance testing, up to this point, has been on the server side of things.  However, with the advancement of technology, HTML5, JS and CSS improvements, more and more logic, behaviour, etc have been pushed down to the client.  Things that add to the overall browser execution time may include:
 
-When load, performance testing is done, the emphasis is usually on the load/capacity that a server or site can handle.  The end user is usually simulated (ie. not using a real browser), and the load time may not represent what a real user might experience.  This project is an attempt to do load testing using a real browser on the actual site/server(s).
+1. Client-side Javascript execution - eg. AJAX, JS templates
+1. CSS transforms - eg. 2D, 3D, matrix transforms.
+1. 3rd party plugins - eg. Facebook like, Double click ads, site analytics, etc
 
-To do so we will use [JMeter](http://jmeter.apache.org) to simulate the creation of the load and [WebDriver](http://seleniumhq.org) to control the browser.  To script the actions for the browser, we currently use Javascript (provided by [Rhino](http://www.mozilla.org/rhino/)).  
+All these things add to the overall browser execution time, and this project aims to measure the time it takes to complete rendering all this content.  
 
-**This is a spike to assess the viability of using a Web Browser as a JMeter sampler**
+**Note:** This project is **not** intended to replace the HTTP Samplers included in JMeter, rather it is meant to compliment them by measuring the time it takes the end user load time.  The use case would still be to create the HTTP Samplers with 50, 100, etc virtual users to create a load on the server side, but at the same time we would also execute a separate JMeter test suite comprising of clients only to assess the performance on the client side.  As mentioned, these samplers are complimentary.
+
+Proposed  solution - JMeter with WebDriver
+==========================================
+The proposed solution here is to use [JMeter](http://jmeter.apache.org) to simulate the creation of the load and [WebDriver](http://seleniumhq.org) to script the browser interaction with the server.  To script the actions for the browser, we currently use Javascript (provided by [Rhino](http://www.mozilla.org/rhino/)).  
 
 See the Getting Started section to try out the spike.
 
